@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gaia Field Log</title>
+<meta name="description" content="A plain, offline-first field notebook for logging tree plantings and restoration monitoring data. Built for Gaia Collect.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500;1,9..144,600&family=Work+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/tool.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="titlebar">
+      <h1>Gaia Field Log</h1>
+      <p>A plain field notebook for restoration monitoring &mdash; no server, no account, no AI model.</p>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button class="tab" data-view="log" role="tab" aria-selected="true">Log</button>
+      <button class="tab" data-view="entries" role="tab" aria-selected="false">Entries</button>
+      <button class="tab" data-view="plot" role="tab" aria-selected="false">Plot</button>
+      <button class="tab" data-view="ethics" role="tab" aria-selected="false">Ethics Checklist</button>
+      <button class="tab" data-view="about" role="tab" aria-selected="false">About</button>
+    </nav>
+  </header>
+
+  <main>
+
+    <section id="view-log" class="view active">
+      <h2>Log a tree</h2>
+      <p class="sub">Entries save to this device only. Coordinates are optional &mdash; copy them from your phone's own GPS or maps app.</p>
+
+      <form id="entryForm">
+        <div class="field">
+          <label for="species">Species</label>
+          <input type="text" id="species" placeholder="e.g. Croton macrostachyus" required>
+        </div>
+
+        <div class="row2">
+          <div class="field">
+            <label for="status">Status</label>
+            <select id="status">
+              <option value="planted">Planted</option>
+              <option value="survived">Survived</option>
+              <option value="lost">Lost</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="date">Date</label>
+            <input type="date" id="date">
+          </div>
+        </div>
+
+        <div class="row2">
+          <div class="field">
+            <label for="lat">Latitude</label>
+            <input type="number" id="lat" step="any" placeholder="optional">
+          </div>
+          <div class="field">
+            <label for="lng">Longitude</label>
+            <input type="number" id="lng" step="any" placeholder="optional">
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="loggedBy">Logged by</label>
+          <input type="text" id="loggedBy" placeholder="optional">
+        </div>
+
+        <div class="field">
+          <label for="notes">Notes</label>
+          <textarea id="notes" placeholder="Site conditions, spacing, anything worth remembering&hellip;"></textarea>
+        </div>
+
+        <div class="btn-row">
+          <button type="submit" class="btn btn-primary">Save entry</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="view-entries" class="view">
+      <h2>Entries</h2>
+      <p class="sub">Everything logged on this device, newest first.</p>
+      <div class="export-row">
+        <button id="downloadCsv" class="btn btn-ghost">Download CSV</button>
+        <button id="copyCsv" class="btn btn-ghost">Copy CSV</button>
+      </div>
+      <div id="entriesList"></div>
+    </section>
+
+    <section id="view-plot" class="view">
+      <h2>Relative plot</h2>
+      <p class="sub">Entries with coordinates, positioned relative to each other. Not a real map.</p>
+      <canvas id="plotCanvas"></canvas>
+      <p id="plotNote" class="plot-note"></p>
+    </section>
+
+    <section id="view-ethics" class="view">
+      <h2>Ethics Checklist</h2>
+      <p class="sub">What this tool checks against UNESCO's AI for Environment and Ecosystems Toolkit for Policymakers, before anything gets called "AI."</p>
+      <ol class="checklist">
+        <li>
+          <span class="ctitle">Is AI even the right tool here?</span>
+          <span class="csource">Toolkit &middot; Step 2, Have a Compass</span>
+          <span class="cbody">Before reaching for a model, the toolkit asks whether the problem actually needs one. Logging a planting and plotting a rough location doesn't &mdash; so this tool has no AI model in it at all. Arithmetic and a bounding box are enough.</span>
+        </li>
+        <li>
+          <span class="ctitle">Data ownership stays with Gaia Collect</span>
+          <span class="csource">Toolkit &middot; Step 2, CARE Principles</span>
+          <span class="cbody">Every entry is written to this browser's local storage, on this device, and nowhere else. No account, no server, no third party ever holds a copy. That's a deliberate reading of data-sovereignty principles for a small, community-rooted project: the data about the land stays with the people working the land.</span>
+        </li>
+        <li>
+          <span class="ctitle">Proportionality</span>
+          <span class="csource">Toolkit &middot; Step 3A, Responsible and Efficient AI</span>
+          <span class="cbody">The Plot tab is a plain scatter plot, not a mapping platform. No tiles are fetched, no geolocation is requested, no live tracking happens. The tool does only as much computation as the task needs, and no more.</span>
+        </li>
+        <li>
+          <span class="ctitle">Locally relevant, not a fixed global list</span>
+          <span class="csource">Toolkit &middot; Step 1, Know the Foundations</span>
+          <span class="cbody">Species, status labels and notes are free text, not a dropdown written for someone else's ecosystem. A tool built around one region's species list silently stops fitting anywhere else; this one doesn't assume what's being planted.</span>
+        </li>
+        <li>
+          <span class="ctitle">No greenwashing</span>
+          <span class="csource">Toolkit &middot; Step 3B, Green AI Pathways</span>
+          <span class="cbody">This page doesn't call itself "AI-powered" to sound credible to funders or partners. It's described plainly as what it is: a static notebook with a CSV export. Overstating the technology here would be exactly the kind of green-colonial framing the toolkit warns against.</span>
+        </li>
+      </ol>
+    </section>
+
+    <section id="view-about" class="view about">
+      <h2>About this tool</h2>
+      <p>Gaia Field Log is a small, offline-first notebook for logging tree plantings and tracking survival over time. It was built for Gaia Collect's restoration work as part of a project for UNESCO's AI Ethics Action Cohorts, at the 4th UNESCO Global Forum on the Ethics of AI.</p>
+      <p>The Ethics Checklist tab applies UNESCO's <em>AI for Environment and Ecosystems Toolkit for Policymakers</em> (Constanza G&oacute;mez Mont and Carlo Angeles) to this tool's own design choices &mdash; including the choice to not use an AI model at all.</p>
+      <p class="muted">Plain HTML, CSS and JavaScript. No build step, no dependencies beyond two Google Fonts. Anyone running a small restoration project is welcome to copy and adapt it.</p>
+    </section>
+
+  </main>
+
+  <div id="toast" class="toast" role="status"></div>
+</div>
+
+<script src="js/storage.js"></script>
+<script src="js/csv.js"></script>
+<script src="js/plot.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

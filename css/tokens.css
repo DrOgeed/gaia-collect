@@ -1,0 +1,83 @@
+/*
+  Gaia Collect — shared design tokens.
+  One palette and type system used by both the website (index.html)
+  and the field tool (field-log.html), so the two feel like one
+  organisation rather than two separate builds.
+*/
+
+:root {
+  --bg: #F1F3EC;
+  --surface: #E3E8D9;
+  --surface-2: #D7DFC8;
+  --ink: #16241B;
+  --muted: #55624F;
+  --primary: #2B4734;
+  --primary-ink: #F1F3EC;
+  --accent: #B56A3C;
+  --accent-ink: #2A160C;
+  --danger: #9C3B2E;
+  --line: rgba(22, 36, 27, 0.16);
+
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-body: 'Work Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #101810;
+    --surface: #17211A;
+    --surface-2: #1F2B20;
+    --ink: #E7ECE0;
+    --muted: #9BAA93;
+    --primary: #8FBE9B;
+    --primary-ink: #0E170F;
+    --accent: #D98F5A;
+    --accent-ink: #2A160C;
+    --danger: #E08275;
+    --line: rgba(231, 236, 224, 0.18);
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #101810;
+  --surface: #17211A;
+  --surface-2: #1F2B20;
+  --ink: #E7ECE0;
+  --muted: #9BAA93;
+  --primary: #8FBE9B;
+  --primary-ink: #0E170F;
+  --accent: #D98F5A;
+  --accent-ink: #2A160C;
+  --danger: #E08275;
+  --line: rgba(231, 236, 224, 0.18);
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+img {
+  max-width: 100%;
+}
